@@ -20,16 +20,16 @@ int main() {
 		scanf("%d %d", &n, &k);
 
 
-	int a, b, va, vb;
+		int a, b, va, vb;
 
-	a = n%k;
-	b = k - a;
-	va = n/k +1;
-	vb = n/k;
+		a = n%k;
+		b = k - a;
+		va = n/k +1;
+		vb = n/k;
 
-	int max = f(b, a, va, vb);
+		int max = f(b, a, va, vb);
 
-	printf("%d", max);
+		printf("%d\n", max);
 
 	}
 	return 0;
