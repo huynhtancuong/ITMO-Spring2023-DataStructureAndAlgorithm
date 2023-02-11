@@ -2,20 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-void setBit(int *bitMask, int k) {
-    *bitMask|=(1<<k);
-}
-
-void unsetBit(int *bitMask, int k) {
-    *bitMask&=~(1<<k);
-}
-
-void bitmask_setvalue(int *bitMask, int k, int value) {
-    if (value != 0 && value != 1) return;
-    if (value == 0) unsetBit(bitMask, k);
-    if (value == 1) setBit(bitMask, k);
-}
-
 long int getDifference(int bitMask, int n, int a[]) {
     long int first_pile = 0, second_pile = 0;
     for (int i = 0; i<n; i++) {
@@ -28,21 +14,6 @@ long int getDifference(int bitMask, int n, int a[]) {
     return abs(first_pile-second_pile);
 }
 
-void permute(int bitMask, int n, int k, int a[], long int *min) {
-
-    if (k == n) {
-        // printBitMask(bitMask, n);
-        int diff = getDifference(bitMask, n, a);
-        if (*min > diff) *min = diff;
-    }
-    else {
-        for (int i = 0; i<=1; i++) {
-            bitmask_setvalue(&bitMask, k, i);
-            permute(bitMask, n, k+1, a, min);
-        }
-    }
-
-}
 
 void printBitMask(int bitMask, int size) {
     int bit;
@@ -66,8 +37,13 @@ int main() {
     }
     
     long int min = 100000000;
+	int size = pow(2, n);
     
-    permute(0, n, 0, arr, &min);
+    for (int bitMask = 0; bitMask < size; bitMask++) {
+		long int diff = getDifference(bitMask, n, arr);
+		if (min > diff) min = diff;
+		if (min == 0) break;
+	}
 
     printf("%ld", min);
 
