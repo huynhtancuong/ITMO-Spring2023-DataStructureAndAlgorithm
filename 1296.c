@@ -2,6 +2,10 @@
 #include <stdlib.h>
 
 
+/// @brief This function find the maximum continuos subarray 
+/// @param a array of weights
+/// @param size size of the array
+/// @return maximum sum of continuos subarray
 int maxSubArraySum(int a[], int size) {
     int max_so_far = 0;
     int max_ending_here = 0;
@@ -17,6 +21,9 @@ int maxSubArraySum(int a[], int size) {
 
 
 int main() {
+
+    // Input
+
 	int n;
     scanf("%d", &n);
     int *arr;
@@ -24,10 +31,15 @@ int main() {
     for (int i = 0; i< n; i++) {
         scanf("%d", &arr[i]);
     }
+    
+    // Find the maximum
+
     int max = maxSubArraySum(arr, n);
+
+    // Output
 
     printf("%d", max);
 
-    free(arr);
+    free(arr); // free memory
 	return 0;
 }
