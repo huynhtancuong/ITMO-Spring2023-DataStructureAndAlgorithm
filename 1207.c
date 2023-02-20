@@ -12,7 +12,7 @@ struct line
 struct point
 {
 	// point: (x, y)
-	int64_t x, y;
+	int32_t x, y;
 };
 
 struct answer
@@ -73,7 +73,7 @@ struct answer find(size_t p1, size_t p2, struct point ps[], size_t size) {
 
 int main() {
 
-	size_t N;
+	int N;
 	scanf("%d", &N);
 
 	struct point *points;
@@ -81,7 +81,7 @@ int main() {
 	points = (struct point *) malloc(sizeof(struct point)*N);
 
 	for (size_t i = 0; i<N; i++) {
-		scanf("%" SCNd64 " %" SCNd64, &points[i].x, &points[i].y);
+		scanf("%" SCNd32 " %" SCNd32, &points[i].x, &points[i].y);
 	}
 
 	struct point p1 = (struct point) {.x = 0, .y = 0};
