@@ -30,7 +30,8 @@ struct line get_line(struct point p1, struct point p2) {
 }
 
 float line_point_distance(struct line d, struct point M) {
-	float dis = (d.a*M.x + d.b*M.y + d.c)/(sqrt(d.a*d.a + d.b*d.b));
+	// float dis = (d.a*M.x + d.b*M.y + d.c)/(sqrt(d.a*d.a + d.b*d.b));
+	float dis = (d.a*M.x + d.b*M.y + d.c);
 	return dis;
 }
 
