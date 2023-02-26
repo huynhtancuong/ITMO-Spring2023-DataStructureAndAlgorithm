@@ -1,22 +1,50 @@
 #include <stdio.h>
+#define MAX_LENGTH 100000
+
+
+
+typedef struct
+{
+    int stack[MAX_LENGTH];
+    size_t top;
+} Stack;
+
+Stack stack_init() {
+    Stack stack;
+    stack.top = 0;
+    return stack;
+}
+
+void stack_push(Stack *stack, int num) {
+    stack->stack[stack->top++] = num;
+}
+
+int stack_pop(Stack *stack) {
+    return stack->stack[--stack->top];
+}
+
+int stack_seek(Stack *stack) {
+    return stack->stack[stack->top - 1];
+}
+
 
 int main() {
-	int N;
-	scanf("%d", &N);
+	int n;
+    scanf("%d", &n);
 
-	int valid = 1;
-	int ball_order = N;
-	for (int i = 0; i<N; i++) {
-		int ball_check;
-		scanf("%d", &ball_check);
-		if (ball_check - ball_order < -2) {
-			valid = 0;
-		}
-		ball_order--;
-	}
+    Stack stack = stack_init();
 
-	if (valid) printf("Not a proof\n");
-	else printf("Cheater\n");
+    int counter = 0;
 
+    for (int i = 0; i<n; i++) {
+        int current;
+        scanf("%d", &current);
+        while (counter < current) stack_push(&stack, ++counter);
+        if (current == stack_seek(&stack)) stack_pop(&stack);
+    }
+
+    if (stack.top == 0) printf("Not a proof");
+    else printf("Cheater");
+    
 	return 0;
 }

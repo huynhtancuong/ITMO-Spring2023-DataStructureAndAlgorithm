@@ -10,18 +10,19 @@ typedef struct {
 
 
 void bubblesort(Sign arr[], size_t n) {
-        int i, j;
-        for (i = 0; i < n-1; i++)
-        // Last i elements are already in place
-                for (j = 0; j < n-i-1; j++)
-                        if (arr[j].amount < arr[j+1].amount) {
+        size_t i, j;
+        for (i = 0; i<2; i++) {
+                for (j = n-1; j>=i+1; j--) {
+                     if (arr[j].amount > arr[j-1].amount) {
                                 Sign tmp = arr[j];
-                                arr[j] = arr[j+1];
-                                arr[j+1] = tmp;
-                        }
+                                arr[j] = arr[j-1];
+                                arr[j-1] = tmp;
+                        }   
+                }
+        }
 }
 
-Sign sign[10000];
+Sign sign[100];
 
 int main() {
         int n;
@@ -41,11 +42,15 @@ int main() {
                         printf("%d %d ", sign[0].index, sign[1].index);
                         sign[0].amount--;
                         sign[1].amount--;
-                        if (sign[1].amount == 0) bubblesort(sign, n);
+                        bubblesort(sign, n);
                 } else {
                         printf("%d ", sign[0].index);
                         sign[0].amount--;
                 }
+        }
+
+        for (size_t i = 0; i<n; i++) {
+                printf("%d ", sign[i].amount);
         }
 
 
