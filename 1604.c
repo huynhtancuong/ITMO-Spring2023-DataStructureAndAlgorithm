@@ -49,9 +49,9 @@ int main() {
                 }
         }
 
-        for (size_t i = 0; i<n; i++) {
-                printf("%d ", sign[i].amount);
-        }
+        // for (size_t i = 0; i<n; i++) {
+        //         printf("%d ", sign[i].amount);
+        // }
 
 
         return 0;

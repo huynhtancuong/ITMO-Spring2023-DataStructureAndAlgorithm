@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11
-SRC = 1604.c
+SRC = 1726.c
 OBJ = $(SRC:.c=.o)
 
 .PHONY: all clean
