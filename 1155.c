@@ -1,5 +1,43 @@
 #include <stdio.h>
 
+typedef struct {
+	char buffer[10000];
+	int pointer;
+} BufferredOuput;
+
+BufferredOuput BufferredOuput_init() {
+	BufferredOuput bufferredOuput;
+	bufferredOuput.pointer = 0;
+	return bufferredOuput;
+}
+
+void BufferredOutput_write(BufferredOuput *bufferredOuput, char *str, size_t size) {
+	for (size_t i = 0; i<size; i++) {
+		bufferredOuput->buffer[bufferredOuput->pointer++] = str[i];
+	}
+	bufferredOuput->buffer[bufferredOuput->pointer] = '\0';
+}
+
+void BufferredOutput_print(BufferredOuput *bufferredOuput) {
+	printf("%s", bufferredOuput->buffer);
+}
+
+void BufferredOutput_delete_newline(BufferredOuput *bufferredOuput) {
+	if (bufferredOuput->buffer[bufferredOuput->pointer-1] == '\n') {
+		bufferredOuput->buffer[--bufferredOuput->pointer] = '\0';
+	}
+}
+
+void BufferredOutput_delete_space(BufferredOuput *bufferredOuput) {
+	if (bufferredOuput->buffer[bufferredOuput->pointer-1] == ' ') {
+		bufferredOuput->buffer[--bufferredOuput->pointer] = '\0';
+	}
+}
+
+
+/////////////////////
+
+
 int connection[8][8] = {
 //   A, B, C, D, E, F, G, H
 	{0, 1, 0, 1, 1, 0, 0, 0},// A
@@ -13,9 +51,11 @@ int connection[8][8] = {
 };
 
 char subset1[] = {'A', 'C', 'F', 'H'};
-char subset2[] = {'B', 'D', 'E', 'F'};
+char subset2[] = {'B', 'D', 'E', 'G'};
 
 int cameras[8];
+
+BufferredOuput bufferredOuput;
 
 
 void subtract(char a, int n) {
@@ -44,13 +84,29 @@ int isSameSubSet(char a, char b) {
 	return 0;
 }
 
+void print_instruction(char a, char b, int sign) {
+	char tmp[5] = "AB+ \n";
+	tmp[0] = a;
+	tmp[1] = b;
+	if (sign) {
+		// printf("%c%c+ \n", a, b);
+		tmp[2] = '+';
+		BufferredOutput_write(&bufferredOuput, tmp, 5);
+	}
+	else {
+		// printf("%c%c- \n", a, b);
+		tmp[2] = '-';
+		BufferredOutput_write(&bufferredOuput, tmp, 5);
+	}
+}
+
 void move(char source, char destination, char middle) {
 
 	if (!isSameSubSet(source, destination)) return;
 	if (!(isConnected(source, middle) && isConnected(destination, middle))) return;
 
-	printf("%c%c+\n", destination, middle);
-	printf("%c%c-\n", source, middle);
+	print_instruction(destination, middle, 1);
+	print_instruction(source, middle, 0);
 	add(destination, 1);
 	subtract(source, 1);
 }
@@ -65,7 +121,7 @@ void moveInSameSubset(char source, char destination, int n) {
 		}
 	}
 	// move
-	for (size_t i = 0; i< n; i++)
+	for (int i = 0; i< n; i++)
 		move(source, destination, middle);
 }
 
@@ -73,7 +129,7 @@ void moveInSameSubset(char source, char destination, int n) {
 void substract_pair(char a, char b, int n) {
 	if (isConnected(a, b)) {
 		for (int i = 0; i<n; i++) {
-			printf("%c%c-\n", a, b);
+			print_instruction(a, b, 0);
 		}
 		cameras[a-'A']--;
 		cameras[b-'A']--;
@@ -125,6 +181,10 @@ int main() {
 	// printf("%d", isIn('E', subset1));
 	// move('H', 'A', 'F');
 	// substract('A', 'C', 5);
+
+	bufferredOuput = BufferredOuput_init();
+
+
 	readInput();
 	if (!isPossible()) {
 		printf("IMPOSSIBLE");
@@ -147,5 +207,12 @@ int main() {
 	// for (size_t i = 0; i<8; i++) printf("%d ", cameras[i]);
 
 	// for (size_t i = 0; i<8; i++) printf("%d ", cameras[i]);
+
+	BufferredOutput_delete_newline(&bufferredOuput);
+
+	BufferredOutput_delete_space(&bufferredOuput);
+
+	BufferredOutput_print(&bufferredOuput);
+
 	return 0;
 }
