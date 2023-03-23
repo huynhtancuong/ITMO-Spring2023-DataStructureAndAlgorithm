@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>
 
-#define COLUMN 512
+size_t n;
+int map[512][512];
+int k = 3;
 
-int x_0, y_0;
-
-
-void fill_map(int map[][COLUMN], size_t n, int num) {
+void fill_map(int map[][512], size_t n, int num) {
 	size_t size = pow(2, n);
 	for (size_t r=0; r<size; r++) {
 		for (size_t c=0; c<size; c++) {
@@ -16,195 +14,89 @@ void fill_map(int map[][COLUMN], size_t n, int num) {
 	}
 }
 
-void print_map(int map[][COLUMN], size_t n) {
+void print_map() {
 	int size = pow(2, n);
 	for (int r=0; r<size; r++) {
 		for (int c=0; c<size; c++) {
-			// if (r == x_0 && c == y_0) 	
-			// 	printf("%2d ", 0);
-			// else 	
-				printf("%2d ", map[r][c]);
+			printf("%2d ", map[r][c]);
 
 		}
 		printf("\n");
 	}
+	printf("\n");
 }
 
-int is_in_map(int x, int y, size_t n) {
-	if ( (x<0) || (y<0) ) return 0;
-	if ( (x > pow(2,n)-1) || (y > pow(2,n)-1)) return 0;
-	return 1;
-}
-
-int is_free(int map[][COLUMN], int x, int y, int state) {
-	if (map[x][y]) return 0;
-	switch (state)
-	{
-	case 1:
-		return !(map[x-1][y] || map[x-1][y-1]);
-		break;
-	case 2:
-		return !(map[x-1][y] || map[x-1][y+1]);
-		break;
-	case 3:
-		return !(map[x][y+1] || map[x-1][y+1]);
-		break;
-	case 4:
-		return !(map[x][y+1] || map[x+1][y+1]);
-		break;
-	case 5:
-		return !(map[x+1][y] || map[x+1][y+1]);
-		break;
-	case 6:
-		return !(map[x+1][y] || map[x+1][y-1]);
-		break;
-	case 7:
-		return !(map[x][y-1] || map[x+1][y-1]);
-		break;
-	case 8:
-		return !(map[x][y-1] || map[x-1][y-1]);
-		break;
-	default:
-		return 0;
-		break;
-	}
-}
-
-int check(size_t n, int x, int y, int state) {
-	if (!is_in_map(x, y, n)) return 0;
-	switch (state)
-	{
-	case 1:
-	case 8:
-		return is_in_map(x-1, y-1, n);
-		break;
-	case 2:
-	case 3:
-		return is_in_map(x-1, y+1, n);
-		break;
-	case 4:
-	case 5:
-		return is_in_map(x+1, y+1, n);
-		break;
-	case 6:
-	case 7:
-		return is_in_map(x+1, y-1, n);
-		break;
-	default:
-		return 0;
-		break;
-	}
-}
-
-int fill(int map[][COLUMN], size_t n, int x, int y, int state, int num_to_fill) {
-	if (!check(n, x, y, state)) return 0;
-
-	map[x][y] = num_to_fill;
-
-	switch (state)
-	{
-	case 1:
-		map[x-1][y] = num_to_fill;
-		map[x-1][y-1] = num_to_fill;
-		break;
-	case 2:
-		map[x-1][y] = num_to_fill;
-		map[x-1][y+1] = num_to_fill;
-		break;
-	case 3:
-		map[x][y+1] = num_to_fill;
-		map[x-1][y+1] = num_to_fill;
-		break;
-	case 4:
-		map[x][y+1] = num_to_fill;
-		map[x+1][y+1] = num_to_fill;
-		break;
-	case 5:
-		map[x+1][y] = num_to_fill;
-		map[x+1][y+1] = num_to_fill;
-		break;
-	case 6:
-		map[x+1][y] = num_to_fill;
-		map[x+1][y-1] = num_to_fill;
-		break;
-	case 7:
-		map[x][y-1] = num_to_fill;
-		map[x+1][y-1] = num_to_fill;
-		break;
-	case 8:
-		map[x][y-1] = num_to_fill;
-		map[x-1][y-1] = num_to_fill;
-		break;
-	default:
-		break;
-	}
-	return 1;
-}
-
-int find_empty_square(int map[][COLUMN], size_t n, int *x, int *y) {
-	for (int row = 0; row < pow(2, n); row++) {
-		for (int column = 0; column < pow(2, n); column++) {
-			if (map[row][column] == 0 ) {
-				*x= row;
-				*y= column;
-				return 1;
+void fill_square_size_2(int x, int y, int hx, int hy) {
+	// we can check if the hole is not in this square, then do nothing
+	// but I don't :) 
+	for (int i=0; i<2; i++) {
+		for (int j=0; j<2; j++) {
+			if (!((x+i == hx) && (y+j == hy))) { // if not the hole, then fill
+				map[x+i][y+j] = k++/3;
 			}
 		}
 	}
-	return 0;
+	// print_map();
 }
 
+void solve(int n, int x, int y, int hx, int hy) {
+	if (n == 2) {
+		fill_square_size_2(x, y, hx, hy); // simplest case
+		return;
+	}
 
+	// let's find the (hi, hj) where the hole is 
+	int hi, hj;
+	for (int i=0; i<2; i++) {
+		for (int j=0; j<2; j++) {
+			if ((x+i*n/2 <= hx) && (hx <x+(i+1)*n/2) && (y+j*n/2 <= hy) && (hy < y+(j+1)*n/2))
+				hi = i, hj = j;
+		}
+	}
 
-void solve(int map[][COLUMN], size_t n, int k) {
-	int max_depth = (pow(2, pow(2, n))-1)/3;
+	// fill the middle triagle 
+	int triangle_x = x + n/2-1, triangle_y = y + n/2-1;
+	fill_square_size_2(triangle_x, triangle_y, triangle_x + hi, triangle_y + hj);
 
-	// if (!find_empty_square(map, n, &x, &y)) return;
-
-	for (int x = 0; x < pow(2, n); x++) {
-		for (int y = 0; y < pow(2, n); y++) {
-			if (map[x][y] == 0 ) {
-				for (int state = 1; state<=8; state++) {
-					if (check(n, x, y, state) && is_free(map, x, y, state)) {
-						fill(map, n, x, y, state, k);
-						// check stop condition
-						// print_map(map, n);
-						// printf("\n");
-						if (k >= max_depth) {
-							print_map(map, n);
-							exit(1);
-						}
-						else {
-							solve(map, n, k+1);
-						}
-						fill(map, n, x, y, state, 0);
-					}
-				}
+	// recursively fill the 3 blocks not contain the hole
+	for (int i=0; i<2; i++) {
+		for (int j=0; j<2; j++) {
+			if (!(i==hi && j==hj)) {// if not the block contain the hole
+				solve(n/2, x+i*n/2, y+j*n/2, x + n/2 - 1 + i, y + n/2 - 1 + j);
+			}
+			else {
+				solve(n/2, x+i*n/2, y+j*n/2, hx, hy);
 			}
 		}
 	}
 
-	
 }
+
 
 int main() {
-
-	size_t n;
-	int map[512][COLUMN];
+	
+	
 
 	scanf("%zu", &n);
 
+	int hx, hy; // hole x, hole y
 
-	scanf("%d %d", &x_0, &y_0);
-	x_0--;
-	y_0--;
+	scanf("%d %d", &hx, &hy);
+	hx--;
+	hy--;
+
+	// fill_map(map, n, 0); // fill the entire map with 0
+
+	// print_map();
+
+	int size = pow(2, n);
+
+	solve(size, 0, 0, hx, hy);
 
 
-	fill_map(map, n, 0);
-	map[x_0][y_0] = -1;
 
-	solve(map, n, 1);
-	// print_map(map, n);
+	print_map(map, n);
+
 
 	return 0;
 }
