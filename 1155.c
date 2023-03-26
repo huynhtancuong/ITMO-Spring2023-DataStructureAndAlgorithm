@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+
+// The program seem to be ok, but I don't know why it can't pass test 1 :((
+
 typedef struct {
 	char buffer[10000];
 	int pointer;
