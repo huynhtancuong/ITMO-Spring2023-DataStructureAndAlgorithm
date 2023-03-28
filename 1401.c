@@ -72,8 +72,7 @@ for the hole. */
 		return;
 	}
 
-/* It finds the block that contains the hole. */
-	// let's find the (hi, hj) where the hole is 
+/* It finds the block that contains the hole (hi, hj). */
 	int hi, hj;
 	for (int i=0; i<2; i++) {
 		for (int j=0; j<2; j++) {
@@ -103,8 +102,6 @@ for the hole. */
 
 int main() {
 	
-	
-
 	scanf("%zu", &n);
 
 	int hx, hy; // hole x, hole y
