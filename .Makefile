@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11
-SRC = 1726.c
+SRC = 1155-rewrite.c
 OBJ = $(SRC:.c=.o)
 
 .PHONY: all clean
@@ -14,7 +14,7 @@ main: $(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f main $(OBJ)
+	rm -f *.exe *.o *.out
 
 test: main
 	./test.sh
