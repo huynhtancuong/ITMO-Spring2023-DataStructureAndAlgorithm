@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 
-#define maxN 500
+#define maxN 501
+#define negative_infinity -1000000000000
 
 int graph[maxN][maxN];
 unsigned int n, m;
+int64_t d[maxN];
+
 
 void print_graph(int n) {
 	for (int i = 1; i <= n; i++) {
@@ -30,6 +34,24 @@ int find_max(int u, int v, unsigned int depth) {
 	return max_profit;
 }
 
+void Ford_Bellman() {
+	int stop;
+	do
+	{
+		stop = 1;
+		for (unsigned int u = 1; u <= n; u++) {
+			for (unsigned int v = 1; v <= n; v++) {
+				if (graph[u][v] != 0) {
+					if (d[v] < d[u] + graph[u][v]) {
+						d[v] = d[u] + graph[u][v];
+						stop = 0;
+					}
+				}
+			}
+		}
+	} while (!stop);
+}
+
 int main() {
 	// init graph
 	memset(graph, 0, sizeof(graph));
@@ -44,10 +66,22 @@ int main() {
 	unsigned int u, v;
 	scanf("%u %u", &u, &v);
 
+	// init array d
+	for (unsigned int i = 1; i <= n; i++) {
+		d[i] = negative_infinity;
+	}
+	d[u] = 0;
+
 	// print_graph(n);
-	unsigned int max_profit = find_max(u, v, 1);
-	if (max_profit != 0) printf("%d\n", max_profit);
-	else printf("No solution\n");
+	Ford_Bellman();
+	if (d[v] <= 0) {
+		printf("No solution");
+	}
+	else {
+		printf("%ld\n", d[v]);
+	}
+	// printf("%ld\n", d[v]);
+	
 
 	return 0;
 }
