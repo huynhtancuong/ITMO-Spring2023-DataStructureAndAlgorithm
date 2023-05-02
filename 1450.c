@@ -20,20 +20,6 @@ void print_graph(int n) {
 	}
 }
 
-int find_max(int u, int v, unsigned int depth) {
-	if (depth == n) return 0;
-	if (graph[u][v] != 0) return graph[u][v];
-	unsigned int max_profit = 0;
-	for (unsigned int i = 1; i <= n; i++) {
-		if (graph[u][i] != 0) {
-			unsigned int profit = find_max(i, v, depth+1);
-			if (profit != 0) profit += graph[u][i];
-			if (profit > max_profit) max_profit = profit;
-		}
-	}
-	return max_profit;
-}
-
 void Ford_Bellman() {
 	int stop;
 	do

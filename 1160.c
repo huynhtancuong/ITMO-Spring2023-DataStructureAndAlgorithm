@@ -3,7 +3,8 @@
 #include <string.h>
 
 
-#define maxN 1001
+#define maxN 2000
+#define maxM 15000
 
 // Struct for Edge
 typedef struct {
@@ -14,7 +15,7 @@ typedef struct {
 // Global variables
 int Lab[maxN];
 int Count[maxN];
-Edge_s E[maxN];
+Edge_s E[maxM];
 int count = 0;
 int connected = 0;
 int maximum_length = 0;
